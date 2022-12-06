@@ -1,0 +1,84 @@
+import java.util.*;
+import java.io.*;
+public class Store {
+    public static void main (String[] args) {
+        Item[] items = new Item[]{
+                new Item("Coca-Cola (single can)",1.49,10),
+                new Item("Lays Original Chips (family size)",3.29,10),
+                new Item("Banana Bunch (3 lbs)",2.49,10),
+                new Item("Captain Crunch (large size)",4.19,10),
+                new Item("Whole Wheat Bread",3.09,10),
+                new Item("Unsalted Butter (16 oz)",4.49,10),
+                new Item("Oven Roasted Turkey Breast (1 lb)",7.50,10),
+                new Item("Fat Free Milk (1 gal)",2.99,10)
+            };
+        Item soda = items[0];
+        Item chips = items[1];
+        Item fruit = items[2];
+        Item cereal = items[3];
+        Item bread = items[4];
+        Item butter = items[5];
+        Item meat = items[6];
+        Item milk = items[7];
+
+        boolean running = true;
+        while(running) {
+            Scanner input = new Scanner(System.in);
+            System.out.println("Welcome to our store!");
+            System.out.println("Would you like to: ");
+            System.out.println("Add an item to your cart [press '1']\nView the items in your cart [press '2']\nView all items available for purchase [press '3']\nCheck out [press '4']\nExit [press '5']");
+            int choice = 0;
+            try{
+                choice = input.nextInt();
+                if(choice < 1 || choice > 5) {
+                    throw new Exception("Invalid input, value outside acceptable range.");
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid value entered.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
+            finally {
+                input.nextLine();
+            }
+            if(choice == 1) {
+                System.out.println(1);
+            }
+            else if (choice == 2) {
+                System.out.println(1);
+            }
+            else if (choice == 3) {
+                viewItems(items);
+            }
+            else if (choice == 4) {
+                System.out.println(4);
+            }
+            else if (choice == 5) {
+                System.out.println("Goodbye! Come Again!");
+                input.close();
+                System.exit(0);
+            }
+        }
+
+    }
+
+    public static void addItem(Scanner input, Item[] itemArr) {
+
+    }
+
+    public static void viewCart(Scanner input, Item[] itemArr) {
+
+    }
+
+    public static void viewItems(Item[] itemArr) {
+        for(int i = 0; i < itemArr.length; i++) {
+            System.out.println(itemArr[i].toString());
+        }
+    }
+
+    public static void checkout(Scanner input, Item[] itemArr) {
+
+    }
+}
