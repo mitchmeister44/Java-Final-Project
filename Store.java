@@ -21,6 +21,8 @@ public class Store {
         Item meat = items[6];
         Item milk = items[7];
 
+        ArrayList<Item> cart = new ArrayList<Item>();
+
         boolean running = true;
         while(running) {
             Scanner input = new Scanner(System.in);
@@ -44,10 +46,10 @@ public class Store {
                 input.nextLine();
             }
             if(choice == 1) {
-                System.out.println(1);
+                addItem(input, items, cart);
             }
             else if (choice == 2) {
-                System.out.println(1);
+                viewCart(input, cart);
             }
             else if (choice == 3) {
                 viewItems(items);
@@ -64,17 +66,70 @@ public class Store {
 
     }
 
-    public static void addItem(Scanner input, Item[] itemArr) {
-
+    public static void addItem(Scanner input, Item[] itemArr, ArrayList cartItems) {
+        try {
+            System.out.println("Please enter the item you would like to add: ");
+            String addedItem = input.nextLine();
+            boolean yes = false;
+            for(int i = 0; i < itemArr.length;i++){
+                if(addedItem.equalsIgnoreCase(itemArr[i].getName())){
+                    cartItems.add(itemArr[i]);
+                    System.out.println("Item added to cart.");
+                    itemArr[i].setStock(itemArr[i].getStock()-1);
+                    yes = true;
+                }
+            }
+            if (yes == false) {
+                throw new Exception("The item you entered is not available. You can ingore its case but make sure you type the item correctly.");
+            }
+        }
+        catch(InputMismatchException e) {
+            System.out.println("The item you entered is not available or invalid.");
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    public static void viewCart(Scanner input, Item[] itemArr) {
-
+    public static void viewCart(Scanner input, ArrayList cartItems) {
+        int choice = 0;
+        try{
+            System.out.println("Would you like you cart sorted in descending order? (press '1' for yes and '2' for no)");
+            choice = input.nextInt();
+            if(choice < 1 || choice > 2) {
+                throw new Exception("Please enter either '1' or '2'");
+            }
+        }
+        catch(InputMismatchException e) {
+            System.out.println("Invalid input.");
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        if(choice == 2) {
+            System.out.println("Your Cart:");
+            for(int i = 0; i < cartItems.size(); i++) {
+                System.out.println(cartItems.get(i));
+                System.out.println("");
+            }
+            System.out.println("");
+        }
+        else if (choice == 1) {
+            Collections.sort(cartItems, Comparator.comparing(Item::getPrice));
+            Collections.reverse(cartItems);            
+            System.out.println("Your Cart:");
+            for(int i = 0; i < cartItems.size(); i++) {
+                System.out.println(cartItems.get(i));
+                System.out.println("");
+            }
+            System.out.println("");
+        }
     }
 
     public static void viewItems(Item[] itemArr) {
         for(int i = 0; i < itemArr.length; i++) {
             System.out.println(itemArr[i].toString());
+            System.out.println("");
         }
     }
 
