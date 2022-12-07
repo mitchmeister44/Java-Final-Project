@@ -1,5 +1,7 @@
 import java.util.*;
 import java.io.*;
+import java.time.*;
+import java.text.SimpleDateFormat;
 public class Store {
     public static void main (String[] args) {
         Item[] items = new Item[]{
@@ -27,6 +29,11 @@ public class Store {
         while(running) {
             Scanner input = new Scanner(System.in);
             System.out.println("Welcome to our store!");
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
+            Date date = new Date();
+            Duration timeUntilClose = Duration.between(LocalTime.now(), LocalDate.now().atTime(LocalTime.of(22,00,00)));
+            System.out.printf("Current date and time: %s%n",formatter.format(date)); 
+            System.out.format("Closing time is 10 o'clock PM. You have %d hours, %d minutes, and %d seconds to shop.%n",timeUntilClose.toHours(),timeUntilClose.toMinutesPart(),timeUntilClose.toSecondsPart());
             System.out.println("Would you like to: ");
             System.out.println("Add an item to your cart [press '1']\nView the items in your cart [press '2']\nView all items available for purchase [press '3']\nCheck out [press '4']\nExit [press '5']");
             int choice = 0;
