@@ -215,18 +215,17 @@ public class Store {
                 else if(answer.equalsIgnoreCase("y")){
                     System.out.println("Please enter a discount code:");
                     String enteredCode = input.nextLine();
-                    for(int i = 0; i < codes.length; i++){
-                        if(codesList.contains(enteredCode)){
-                            System.out.println("Discount applied");
-                            for (int j = 0; j < cartItems.size(); j++){
-                                writer.write(receiptFormatDiscounted(cartItems, j, df));
-                                writer.write("\n");
-                                totalValue += receiptTotalDiscounted(cartItems, j);
-                            }
-                            discount = true;
-                            break;
+
+                    if(codesList.contains(enteredCode)){
+                        System.out.println("Discount applied");
+                        for (int j = 0; j < cartItems.size(); j++){
+                            writer.write(receiptFormatDiscounted(cartItems, j, df));
+                            writer.write("\n");
+                            totalValue += receiptTotalDiscounted(cartItems, j);
                         }
+                        discount = true;
                     }
+
                     if(discount == false) {
                         System.out.println("Invalid discount code.");
                         for (int i = 0; i < cartItems.size(); i++){
