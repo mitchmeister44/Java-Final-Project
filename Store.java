@@ -188,6 +188,7 @@ public class Store {
                 System.out.println("I/O error occurred");
             }
         }
+        printReceipt(file);
     }
 
     public static String receiptFormat (ArrayList cartItems, int i){
@@ -201,5 +202,28 @@ public class Store {
         Item n = (Item) cartItems.get(i);
         double total = n.getPrice();
         return total;
+    }
+    
+    public static void printReceipt (File file) {
+        Scanner reader = null;
+        try{
+            reader = new Scanner(file);
+
+            while (reader.hasNextLine()){
+                String line = reader.nextLine();
+                System.out.println(line);
+            }
+        }
+        catch(FileNotFoundException e) {
+            System.out.println("File was not found.");
+        }
+        catch(NoSuchElementException e) {
+            System.out.println("Error encountered while reading from file.");
+        }
+        finally {
+            if(reader != null){
+                reader.close();
+            }
+        }
     }
 }
