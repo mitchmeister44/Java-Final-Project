@@ -42,11 +42,11 @@ public class Store {
             Scanner input = new Scanner(System.in);
 
             System.out.println("Would you like to: ");
-            System.out.println("Add an item to your cart [press '1']\nView the items in your cart [press '2']\nView all items available for purchase [press '3']\nCheck out [press '4']\nExit [press '5']");
+            System.out.println("Add an item to your cart [press '1']\nView the items in your cart [press '2']\nRemove an item from your cart [press '3']\nView all items available for purchase [press '4']\nCheck out [press '5']\nExit [press '6']");
             int choice = 0;
             try{
                 choice = input.nextInt();
-                if(choice < 1 || choice > 5) {
+                if(choice < 1 || choice > 6) {
                     throw new Exception("Invalid input, value outside acceptable range.");
                 }
             }
@@ -66,12 +66,16 @@ public class Store {
                 viewCart(input, cart);
             }
             else if (choice == 3) {
-                viewItems(items);
+                removeItem(input, cart);
             }
             else if (choice == 4) {
-                checkout(cart);
+                viewItems(items);
             }
             else if (choice == 5) {
+                checkout(cart);
+            }
+
+            else if (choice == 6) {
                 System.out.println("Goodbye! Come Again!");
                 input.close();
                 System.exit(0);
@@ -102,6 +106,39 @@ public class Store {
         }
         catch(Exception e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    public static void removeItem(Scanner input, ArrayList cartItems) {
+        if(cartItems.size() == 0) {
+            System.out.println("Your cart is empty, no need to remove an item.");
+            return;
+        }
+        else{
+            try {
+                System.out.println("Please enter the item you would like to add: ");
+                String removedItem = input.nextLine();
+                boolean yes = false;
+                Item n = null;
+                for(int i = 0; i < cartItems.size();i++){
+                    n = (Item) cartItems.get(i);
+                    if(removedItem.equalsIgnoreCase(n.getName())){
+                        cartItems.remove(n);
+                        System.out.println("Item removed from cart.");
+                        n.setStock(n.getStock()+1);
+                        yes = true;
+                    }
+                }
+                if (yes == false) {
+                    throw new Exception("The item you entered is not available. You can ingore its case but make sure you type the item correctly.");
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("The item you entered is not available or invalid.");
+            }
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -203,7 +240,7 @@ public class Store {
         double total = n.getPrice();
         return total;
     }
-    
+
     public static void printReceipt (File file) {
         Scanner reader = null;
         try{
