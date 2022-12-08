@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 import java.time.*;
-import java.text.SimpleDateFormat;
+import java.text.*;
 public class Store {
     public static void main (String[] args) {
         Item[] items = new Item[]{
@@ -25,6 +25,7 @@ public class Store {
 
         ArrayList<Item> cart = new ArrayList<Item>();
 
+        DecimalFormat df = new DecimalFormat("#.00");
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
         Date date = new Date();
         Duration timeUntilClose = Duration.between(LocalTime.now(), LocalDate.now().atTime(LocalTime.of(22,00,00)));
@@ -72,7 +73,7 @@ public class Store {
                 viewItems(items);
             }
             else if (choice == 5) {
-                checkout(cart);
+                checkout(cart, input, df);
             }
 
             else if (choice == 6) {
@@ -184,7 +185,7 @@ public class Store {
         }
     }
 
-    public static void checkout(ArrayList cartItems) {
+    public static void checkout(ArrayList cartItems, Scanner input, DecimalFormat df) {
         File file = new File("recipt.txt");
         BufferedWriter writer = null;
 
@@ -198,12 +199,52 @@ public class Store {
             writer.write("_______________________________________\n\n");
             String total = null;
             double totalValue = 0;
-            for (int i = 0; i < cartItems.size(); i++){
-                writer.write(receiptFormat(cartItems, i));
-                writer.write("\n");
-                totalValue += receiptTotal(cartItems, i);
+            boolean discount = false;
+            String[] codes = new String[]{"COLE10","AIDAN10","MITCH10","FREESTUFF","LOVEMARESSO"};
+            List codesList = Arrays.asList(codes);
+            try{
+                System.out.println("Would you like to apply a discount code? [Press 'y' for yes, 'n' for no]");
+                String answer = input.nextLine();
+                if(answer.equalsIgnoreCase("n")){
+                    for (int i = 0; i < cartItems.size(); i++){
+                        writer.write(receiptFormat(cartItems, i, df));
+                        writer.write("\n");
+                        totalValue += receiptTotal(cartItems, i);
+                    }
+                }
+                else if(answer.equalsIgnoreCase("y")){
+                    System.out.println("Please enter a discount code:");
+                    String enteredCode = input.nextLine();
+                    for(int i = 0; i < codes.length; i++){
+                        if(codesList.contains(enteredCode)){
+                            System.out.println("Discount applied");
+                            for (int j = 0; j < cartItems.size(); j++){
+                                writer.write(receiptFormatDiscounted(cartItems, j, df));
+                                writer.write("\n");
+                                totalValue += receiptTotalDiscounted(cartItems, j);
+                            }
+                            discount = true;
+                            break;
+                        }
+                    }
+                    if(discount == false) {
+                        System.out.println("Invalid discount code.");
+                        for (int i = 0; i < cartItems.size(); i++){
+                            writer.write(receiptFormat(cartItems, i, df));
+                            writer.write("\n");
+                            totalValue += receiptTotal(cartItems, i);
+                        }
+                    }
+                }
+                else{
+                    throw new Exception("Please enter either 'y' or 'n'");
+                }
             }
-            total = Double.toString(totalValue);
+            catch(Exception e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+            total = String.valueOf(df.format(totalValue));
             writer.write("_______________________________________\n\n");
             writer.write("Total: \t\t\t\t $");
             writer.write(total);
@@ -228,16 +269,30 @@ public class Store {
         printReceipt(file);
     }
 
-    public static String receiptFormat (ArrayList cartItems, int i){
+    public static String receiptFormat (ArrayList cartItems, int i, DecimalFormat df){
         Item n = (Item) cartItems.get(i);
         String name = n.getName();
-        String price = String.valueOf(n.getPrice());
+        String price = String.valueOf(df.format(n.getPrice()));
         return String.format("%s: \t\t $%s",name , price);
     }
 
-    public static double receiptTotal (ArrayList cartItems, int i){
+    public static String receiptFormatDiscounted(ArrayList cartItems, int i, DecimalFormat df) {
+        Item n = (Item) cartItems.get(i);
+        String name = n.getName();
+        String price = String.valueOf(df.format((n.getPrice()*0.9d)));
+        return String.format("%s: \t\t $%s",name , price);
+    }
+
+    public static double receiptTotal(ArrayList cartItems, int i) {
+        Item n = (Item) cartItems.get(i);
+        double total = (n.getPrice());
+        return total;
+    }
+
+    public static double receiptTotalDiscounted (ArrayList cartItems, int i){
         Item n = (Item) cartItems.get(i);
         double total = n.getPrice();
+        total = total*0.9d;
         return total;
     }
 
