@@ -5,14 +5,14 @@ import java.text.SimpleDateFormat;
 public class Store {
     public static void main (String[] args) {
         Item[] items = new Item[]{
-                new Item("Coca-Cola (single can)",1.49,10),
-                new Item("Lays Original Chips (family size)",3.29,10),
-                new Item("Banana Bunch (3 lbs)",2.49,10),
-                new Item("Captain Crunch (large size)",4.19,10),
+                new Item("Coca-Cola Can",1.49,10),
+                new Item("Lays Original Chips",3.29,10),
+                new Item("Banana Bunch",2.49,10),
+                new Item("Captain Crunch",4.19,10),
                 new Item("Whole Wheat Bread",3.09,10),
-                new Item("Unsalted Butter (16 oz)",4.49,10),
-                new Item("Oven Roasted Turkey Breast (1 lb)",7.50,10),
-                new Item("Fat Free Milk (1 gal)",2.99,10)
+                new Item("Unsalted Butter",4.49,10),
+                new Item("Oven Roasted Turkey Breast",7.50,10),
+                new Item("Fat Free Milk",2.99,10)
             };
         Item soda = items[0];
         Item chips = items[1];
@@ -25,15 +25,22 @@ public class Store {
 
         ArrayList<Item> cart = new ArrayList<Item>();
 
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
+        Date date = new Date();
+        Duration timeUntilClose = Duration.between(LocalTime.now(), LocalDate.now().atTime(LocalTime.of(22,00,00)));
+        System.out.printf("Current date and time: %s%n",formatter.format(date)); 
+        if(timeUntilClose.toSecondsPart() < 0 ) {
+            System.out.println("Sorry, our store is closed.\nWe will reopen at 8 AM.");
+            System.exit(0);
+        }
+        else {
+            System.out.format("Closing time is 10 o'clock PM. You have %d hours, %d minutes, and %d seconds to shop.%n",timeUntilClose.toHours(),timeUntilClose.toMinutesPart(),timeUntilClose.toSecondsPart());
+        }
         boolean running = true;
+        System.out.println("Welcome to ACM (all you can muster) Foods!");
         while(running) {
             Scanner input = new Scanner(System.in);
-            System.out.println("Welcome to our store!");
-            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
-            Date date = new Date();
-            Duration timeUntilClose = Duration.between(LocalTime.now(), LocalDate.now().atTime(LocalTime.of(22,00,00)));
-            System.out.printf("Current date and time: %s%n",formatter.format(date)); 
-            System.out.format("Closing time is 10 o'clock PM. You have %d hours, %d minutes, and %d seconds to shop.%n",timeUntilClose.toHours(),timeUntilClose.toMinutesPart(),timeUntilClose.toSecondsPart());
+
             System.out.println("Would you like to: ");
             System.out.println("Add an item to your cart [press '1']\nView the items in your cart [press '2']\nView all items available for purchase [press '3']\nCheck out [press '4']\nExit [press '5']");
             int choice = 0;
