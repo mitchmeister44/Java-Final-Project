@@ -186,7 +186,7 @@ public class Store {
     }
 
     public static void checkout(ArrayList cartItems, Scanner input, DecimalFormat df) {
-        File file = new File("recipt.txt");
+        File file = new File("receipt.txt");
         BufferedWriter writer = null;
 
         try {
