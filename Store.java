@@ -62,7 +62,7 @@ public class Store {
                 viewItems(items);
             }
             else if (choice == 4) {
-                System.out.println(4);
+                checkout(cart);
             }
             else if (choice == 5) {
                 System.out.println("Goodbye! Come Again!");
@@ -140,7 +140,59 @@ public class Store {
         }
     }
 
-    public static void checkout(Scanner input, Item[] itemArr) {
+    public static void checkout(ArrayList cartItems) {
+        File file = new File("recipt.txt");
+        BufferedWriter writer = null;
 
+        try {
+            writer = new BufferedWriter(new FileWriter(file));
+            writer.write("ACM (All you Can Muster) Foods\n");
+            writer.write("123 Maresso Lane Whitewater, Wisconsin\n");
+            writer.write("1-(262)-420-6969\n");
+            writer.write("_______________________________________\n\n");
+            writer.write("RECEIPT\n");
+            writer.write("_______________________________________\n\n");
+            String total = null;
+            double totalValue = 0;
+            for (int i = 0; i < cartItems.size(); i++){
+                writer.write(receiptFormat(cartItems, i));
+                writer.write("\n");
+                totalValue += receiptTotal(cartItems, i);
+            }
+            total = Double.toString(totalValue);
+            writer.write("_______________________________________\n\n");
+            writer.write("Total: \t\t\t\t $");
+            writer.write(total);
+            writer.write("\n");
+            writer.write("_______________________________________\n\n");
+            writer.write("Thank You For Shopping at\n");
+            writer.write("ACM (All you Can Muster) Foods\n");
+            writer.write("_______________________________________");
+        }
+        catch (IOException e) {
+            System.out.println("Could not write to file");
+        }
+        finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                System.out.println("I/O error occurred");
+            }
+        }
+    }
+
+    public static String receiptFormat (ArrayList cartItems, int i){
+        Item n = (Item) cartItems.get(i);
+        String name = n.getName();
+        String price = String.valueOf(n.getPrice());
+        return String.format("%s: \t\t $%s",name , price);
+    }
+
+    public static double receiptTotal (ArrayList cartItems, int i){
+        Item n = (Item) cartItems.get(i);
+        double total = n.getPrice();
+        return total;
     }
 }
