@@ -117,7 +117,7 @@ public class Store {
         }
         else{
             try {
-                System.out.println("Please enter the item you would like to add: ");
+                System.out.println("Please enter the item you would like to remove: ");
                 String removedItem = input.nextLine();
                 boolean yes = false;
                 Item n = null;
@@ -135,7 +135,7 @@ public class Store {
                 }
             }
             catch(InputMismatchException e) {
-                System.out.println("The item you entered is not available or invalid.");
+                System.out.println("The item you entered is not in your cart or invalid.");
             }
             catch(Exception e) {
                 System.out.println(e.getMessage());
