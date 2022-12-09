@@ -70,7 +70,12 @@ public class Store {
                 removeItem(input, cart);
             }
             else if (choice == 4) {
-                viewItems(items);
+                if(cart.size() == 0){
+                    System.out.println("You cannot checkout with zero items in your cart.");
+                }
+                else {
+                    viewItems(items);
+                }
             }
             else if (choice == 5) {
                 if(cart.size() == 0){
