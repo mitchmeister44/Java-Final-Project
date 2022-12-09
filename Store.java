@@ -28,7 +28,7 @@ public class Store {
         DecimalFormat df = new DecimalFormat("#.00");
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
         Date date = new Date();
-        Duration timeUntilClose = Duration.between(LocalTime.now(), LocalDate.now().atTime(LocalTime.of(22,00,00)));
+        Duration timeUntilClose = Duration.between(LocalTime.now(), LocalDate.now().atTime(LocalTime.of(23,00,00)));
         System.out.printf("Current date and time: %s%n",formatter.format(date)); 
         if(timeUntilClose.toSecondsPart() < 0 ) {
             System.out.println("Sorry, our store is closed.\nWe will reopen at 8 AM.");
@@ -73,7 +73,12 @@ public class Store {
                 viewItems(items);
             }
             else if (choice == 5) {
-                checkout(cart, input, df);
+                if(cart.size() == 0){
+                    System.out.println("You cannot checkout with zero items in your cart.");
+                }
+                else{
+                    checkout(cart, input, df);
+                }
             }
 
             else if (choice == 6) {
@@ -135,7 +140,7 @@ public class Store {
                 }
             }
             catch(InputMismatchException e) {
-                System.out.println("The item you entered is not in your cart or invalid.");
+                System.out.println("The item you entered is not available or invalid.");
             }
             catch(Exception e) {
                 System.out.println(e.getMessage());
